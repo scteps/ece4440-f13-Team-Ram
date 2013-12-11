@@ -1,0 +1,47 @@
+Info: Upgrading System to Qsys
+Debug: Transform: PipelineBridgeSwap
+Info: pipeline_bridge_swap_transform: After transform: 19 modules, 49 connections
+Debug: Transform: ClockCrossingBridgeSwap
+Debug: Transform: QsysBetaIPSwap
+Debug: Transform: TristateConduitUpgradeTransform
+Info: tristate_conduit_upgrade_transform: After transform: 20 modules, 51 connections
+Debug: Transform: ResetUpgradeTransform
+Info: reset_upgrade_transform: After transform: 20 modules, 94 connections
+Debug: Transform: BorderUpgradeTransform
+Info: border_upgrade_transform: After transform: 22 modules, 95 connections
+Info: Info: *******************************************************************
+Info: Info: Running Quartus II 32-bit Shell
+Info:     Info: Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edition
+Info:     Info: Copyright (C) 1991-2013 Altera Corporation. All rights reserved.
+Info:     Info: Your use of Altera Corporation's design tools, logic functions 
+Info:     Info: and other software and tools, and its AMPP partner logic 
+Info:     Info: functions, and any output files from any of the foregoing 
+Info:     Info: (including device programming or simulation files), and any 
+Info:     Info: associated documentation or information are expressly subject 
+Info:     Info: to the terms and conditions of the Altera Program License 
+Info:     Info: Subscription Agreement, Altera MegaCore Function License 
+Info:     Info: Agreement, or other applicable license agreement, including, 
+Info:     Info: without limitation, that your use is for the sole purpose of 
+Info:     Info: programming logic devices manufactured by Altera and sold by 
+Info:     Info: Altera or its authorized distributors.  Please refer to the 
+Info:     Info: applicable agreement for further details.
+Info:     Info: Processing started: Sun Nov 17 16:32:58 2013
+Info: Info: Command: quartus_sh -t sopc_qsys_upgrade.tcl
+Info: QSF file C:\DE2_SOPC_MTL_PAINTER\MTL_DEMO.qsf altered
+Info: File altpll_sys.v moved to MTL_SOPC_backup/altpll_sys.v
+Info: File sram.v moved to MTL_SOPC_backup/sram.v
+Info: File cpu.sdc moved to MTL_SOPC_backup/cpu.sdc
+Info: File cpu.ocp moved to MTL_SOPC_backup/cpu.ocp
+Info: File alt_vip_vfr_0.v moved to MTL_SOPC_backup/alt_vip_vfr_0.v
+Info: File alt_vip_itc_0.v moved to MTL_SOPC_backup/alt_vip_itc_0.v
+Info: File multi_touch.v moved to MTL_SOPC_backup/multi_touch.v
+Info: File MTL_SOPC.bsf moved to MTL_SOPC_backup/MTL_SOPC.bsf
+Info: File MTL_SOPC.html moved to MTL_SOPC_backup/MTL_SOPC.html
+Info: File MTL_SOPC.ptf moved to MTL_SOPC_backup/MTL_SOPC.ptf
+Info: File MTL_SOPC.ptf.8.0 moved to MTL_SOPC_backup/MTL_SOPC.ptf.8.0
+Info: File MTL_SOPC.ptf.pre_generation_ptf moved to MTL_SOPC_backup/MTL_SOPC.ptf.pre_generation_ptf
+Info: File MTL_SOPC.qip moved to MTL_SOPC_backup/MTL_SOPC.qip
+Info: File MTL_SOPC.sopc moved to MTL_SOPC_backup/MTL_SOPC.sopc
+Info: File MTL_SOPC.sopcinfo moved to MTL_SOPC_backup/MTL_SOPC.sopcinfo
+Info: File MTL_SOPC.v moved to MTL_SOPC_backup/MTL_SOPC.v
+Info: SOPC to Qsys Upgrade Done

@@ -1,0 +1,51 @@
+
+**** Build of configuration Nios II for project atest ****
+
+make all 
+Info: Building ../atest_bsp/
+make --no-print-directory -C ../atest_bsp/
+[BSP build complete]
+Info: Compiling gui.c to obj/default/gui.o
+nios2-elf-gcc -xc -MP -MMD -c -I../atest_bsp//HAL/inc -I../atest_bsp/ -I../atest_bsp//drivers/inc  -DSYSTEM_BUS_WIDTH=32 -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -EL -mno-hw-div -mhw-mul -mno-hw-mulx  -o obj/default/gui.o gui.c
+In file included from gui.c:8:
+sensor.h:41: error: expected ')' before '*' token
+sensor.h:42: error: expected ')' before '*' token
+sensor.h:43: error: expected ')' before '*' token
+gui.c: In function 'sliding_plot':
+gui.c:135: warning: unused variable 'i'
+gui.c: In function 'draw_options':
+gui.c:215: warning: initialization makes pointer from integer without a cast
+gui.c:215: warning: excess elements in scalar initializer
+gui.c:215: warning: (near initialization for 'wind_opts')
+gui.c:215: warning: excess elements in scalar initializer
+gui.c:215: warning: (near initialization for 'wind_opts')
+gui.c: In function 'GUI_DeskDraw':
+gui.c:283: warning: assignment makes pointer from integer without a cast
+gui.c:284: warning: assignment makes pointer from integer without a cast
+gui.c:285: warning: assignment makes pointer from integer without a cast
+gui.c:286: warning: assignment makes pointer from integer without a cast
+gui.c:287: warning: assignment makes pointer from integer without a cast
+gui.c:323: warning: passing argument 7 of 'vid_print_string_alpha' discards qualifiers from pointer target type
+gui.c:332: warning: format '%d' expects type 'int', but argument 3 has type 'const int *'
+gui.c:332: warning: format '%d' expects type 'int', but argument 3 has type 'const int *'
+gui.c:273: warning: unused variable 'rc'
+gui.c: In function 'GUI':
+gui.c:482: warning: unused variable 'ContinuedTime'
+gui.c:481: warning: unused variable 'LastTimePt2'
+gui.c:481: warning: unused variable 'LastTimePt1'
+gui.c:480: warning: unused variable 'LastPt2'
+gui.c:480: warning: unused variable 'LastPt1'
+gui.c:476: warning: unused variable 'data'
+gui.c:475: warning: unused variable 'UpdatePalette'
+gui.c:474: warning: unused variable 'ButtonId2'
+gui.c:474: warning: unused variable 'ButtonId'
+gui.c:474: warning: unused variable 'ColorPen1'
+gui.c:474: warning: unused variable 'ColorPen0'
+gui.c:468: warning: unused variable 'rcTouch'
+gui.c:467: warning: unused variable 'nDotSize'
+gui.c:466: warning: unused variable 'LedMask'
+gui.c:465: warning: unused variable 'ptGesture'
+gui.c:465: warning: unused variable 'Pt2'
+make: *** [obj/default/gui.o] Error 1
+
+**** Build Finished ****

@@ -1,0 +1,339 @@
+#include "terasic_includes.h"
+#include "gui.h"
+#include "vip_fr.h"
+#include "multi_touch.h"
+#include "simple_graphics.h"
+#include "geometry.h"
+#include "gesture.h"
+#include "plotter.c"
+
+extern const struct bmp_struct gesture_bmp;
+
+#define ENALBE_TOUCH_FILTER
+//#define DUAL_FRAME_BUFFER
+
+
+#define FRAME_WIDTH  800
+#define FRAME_HEIGHT 480
+#define DOT_SIZE    6
+
+#define FR_FRAME_0  (SDRAM_BASE)
+#define FR_FRAME_1  (SDRAM_BASE + FRAME_WIDTH*FRAME_HEIGHT*4)
+
+// Overall background color
+#define BG_COLOR                       0x474747
+
+// Title Bar Placement
+#define VERT_LENGTH_TITLE_BAR          51
+#define BG_COLOR_TITLE_BAR             0xFFFFFF
+#define COLOR_TITLE_TEXT               0xa7a7a7
+#define OFFSET_VERT_TITLE_TEXT         10
+#define OFFSET_HORIZ_TITLE_TEXT        250
+                                       
+// Button Placement                    
+#define BTN_OFFSET_VERT_OPTIONS        440
+#define BTN_OFFSET_HORIZ_OPTIONS       0
+#define BTN_VERT_LENGTH_OPTIONS        20
+#define BTN_HORIZ_LENGTH_OPTIONS       40
+#define BTN_BG_COLOR_OPTIONS           0xa7a7a7
+#define BTN_TEXT_COLOR_OPTIONS         0xFFFFFF
+#define BTN_OFFSET_VERT_TEXT_OPTIONS   450
+#define BTN_OFFSET_HORIZ_TEXT_OPTIONS  10 
+
+// Graph Placement
+#define AXIS_COLOR                     0xa7a7a7
+#define PLOT_COLOR                     0x2c64c8
+#define GRAPH_BOT_VERT_OFFSET          300
+#define GRAPH_BOT_HORIZ_OFFSET         20
+#define GRAPH_VERT_LENGTH              150
+#define GRAPH_HORIZ_LENGTH             150
+
+// Info placement
+#define LABEL_OFFSET_VERT              150
+#define LABEL_OFFSET_HORIZ             450
+#define STAT_OFFSET_VERT               150
+#define STAT_OFFSET_HORIZ              700
+#define VERT_SPACING_INFO              40
+#define COLOR_INFO_TEXT                0xa7a7a7
+
+#define NUM_OPTIONS                    5
+
+// Test values for the graph
+const int arr_lengths = 9;
+const int xdata[] = {10, 20, 30, 40, 50, 60, 70, 80, 90};
+const int ydata[] = {10, 80, 160, 50, 90, 120, 33, 55, 300};
+
+
+//#define VALID_POINT(x,y) (((x)>=DOT_SIZE && (x)<FRAME_WIDTH-DOT_SIZE && (y)>=DOT_SIZE && (y)<FRAME_HEIGHT-DOT_SIZE)?TRUE:FALSE)
+
+void GUI_ShowInfo(VIP_FRAME_READER *pReader, char *pText);
+void GUI_ShowWelcome(VIP_FRAME_READER *pReader);
+void GUI_ShowTouchPoint(VIP_FRAME_READER *pReader, int X1, int Y1, int color);
+
+
+alt_u32 szPallete[] = {
+    BLACK_24,
+    WHITE_24,
+    0xFFFFFF,
+    0x0000FF,
+    0x00FF00,
+    0xFF0000,
+    0x00FFFF,
+    0xFFFF00,
+    0xFF00FF,
+    //0x7F7F7F
+};
+
+
+//void GUI_DeskInit(VIP_FRAME_READER *pReader, DESK_INFO *pDeskInfo){
+//    int i;
+//    RECT rc;
+//    const int BoxH = 70;
+//    const int BoxW = 70;
+//    const int GapH = 10;
+//    const int DrawBorder = 2;
+//    const int TextW = 120;
+//    int GapW;
+//
+//
+//    GapW = (pReader->width - TextW - (BTN_NUM*BoxW))/(BTN_NUM+1);
+//    rc.top = pReader->height - BoxH - GapH;
+//    rc.bottom = rc.top + BoxH;
+//    rc.left = GapW + TextW;
+//    rc.right = rc.left + BoxW;
+//
+//    // desk drawing area
+//    RectSet(&pDeskInfo->rcPaint, DrawBorder, pReader->width-DrawBorder, DrawBorder, rc.top - DrawBorder);
+//
+//    for(i=0;i<BTN_NUM;i++){
+//        RectCopy(&pDeskInfo->szPalette[i].rc, &rc);
+//        pDeskInfo->szPalette[i].color = szPallete[i];
+//        RectOffset(&rc, BoxW+GapW, 0);
+//    }
+//    pDeskInfo->Paint0_Index = BTN_BLUE;
+//    pDeskInfo->Paint1_Index = BTN_GREEN;
+//}
+
+int GUI_CheckButton(POINT *pt, RECT * rc_button){
+
+    if(IsPtInRect(pt, rc_button))
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+
+
+void GUI_DeskDraw(VIP_FRAME_READER *pReader, RECT* rc_button){
+    RECT rc;
+
+    const char * OPTIONS[NUM_OPTIONS];
+       OPTIONS[0] = "Battery Level";
+       OPTIONS[1] = "Power from Battery";
+       OPTIONS[2] = "Panel Voltage";
+       OPTIONS[3] = "Charge State";
+       OPTIONS[4] = "Battery Time Left";
+
+       const int * STATS[NUM_OPTIONS];
+       STATS[0] = 1;
+       STATS[1] = 33;
+       STATS[2] = 2;
+       STATS[3] = 54;
+       STATS[4] = 100;
+    
+
+    // Draw the background
+    vid_draw_box(0, 0, FRAME_WIDTH, FRAME_HEIGHT, BG_COLOR, 1, pReader);
+
+    // Draw the Title Bar
+    vid_draw_box(0, 0, FRAME_WIDTH, VERT_LENGTH_TITLE_BAR, BG_COLOR_TITLE_BAR, 1, pReader);
+    vid_print_string_alpha(OFFSET_HORIZ_TITLE_TEXT, OFFSET_VERT_TITLE_TEXT, COLOR_TITLE_TEXT, BG_COLOR_TITLE_BAR, tahomabold_20, pReader, "Solar Car Status Screen");
+    
+    // Draw the button
+    vid_draw_box(BTN_OFFSET_HORIZ_OPTIONS, BTN_OFFSET_VERT_OPTIONS, BTN_HORIZ_LENGTH_OPTIONS, BTN_VERT_LENGTH_OPTIONS, BTN_BG_COLOR_OPTIONS, 1, pReader);
+    vid_print_string_alpha(BTN_OFFSET_HORIZ_TEXT_OPTIONS, BTN_OFFSET_VERT_TEXT_OPTIONS, BTN_TEXT_COLOR_OPTIONS, BTN_BG_COLOR_OPTIONS, tahomabold_20, pReader, "Options");
+    
+    
+    // Draw the info
+    int i;
+    for(i = 0; i < NUM_OPTIONS; ++i)
+    {
+        vid_print_string_alpha(LABEL_OFFSET_HORIZ, LABEL_OFFSET_VERT + (i * VERT_SPACING_INFO), COLOR_INFO_TEXT, BG_COLOR, tahomabold_20, pReader, OPTIONS[i]);
+    }
+
+    // Draw the stats
+    // TODO Have to cast the int into a string correctly
+    char digits[] = "00";
+
+    for(i = 0; i < NUM_OPTIONS; ++i)
+    {
+        sprintf(digits, "%d", STATS[i]);
+        vid_print_string_alpha(STAT_OFFSET_HORIZ, STAT_OFFSET_VERT + (i * VERT_SPACING_INFO), COLOR_INFO_TEXT, BG_COLOR, tahomabold_20, pReader, digits);
+    }
+
+    // Set button rect dims
+
+    RectSet(rc_button,
+    		BTN_OFFSET_HORIZ_OPTIONS,
+    		BTN_OFFSET_HORIZ_OPTIONS + BTN_HORIZ_LENGTH_OPTIONS,
+    		BTN_OFFSET_VERT_OPTIONS,
+    		BTN_OFFSET_VERT_OPTIONS + BTN_VERT_LENGTH_OPTIONS);
+
+    // Draw the graph
+
+
+
+    // draw border
+    //RectCopy(&rc, &pDeskInfo->rcPaint);
+    //vid_draw_box (rc.left, rc.top, rc.right, rc.bottom, WHITE_24, DO_NOT_FILL, pReader);
+    // TODO Cannot control the thickness of the line with this function.
+    vid_draw_line(0, 100, 400, 20, 1, 0xFFFFFF, pReader);
+
+
+}
+
+bool IsContinuedPoint(POINT *ptPre, POINT *ptNew){
+    bool bYes = TRUE;
+    const int nMax = 50;
+    if (abs(ptPre->x - ptNew->x) > nMax)
+        bYes = FALSE;
+    else if (abs(ptPre->y - ptNew->y) > nMax)
+        bYes = FALSE;
+        
+    return bYes;        
+        
+}
+
+void GUI_ShowGesture(VIP_FRAME_READER *pReader, POINT *ptDraw, alt_u8 GestureId ){
+    // show bitmap
+    int nIndex = -1, x, y;
+    const int BmpW = 60;
+    const int BmpH = 60;
+    alt_u8 *pDes, *pSrc, *pDesStart;
+    
+    // find gesture bitmap id
+    switch(GestureId){
+        case MTC_ST_NORTH:  nIndex = 0; break;
+        case MTC_ST_SOUTH:  nIndex = 1; break;
+        case MTC_ST_EAST:   nIndex = 2; break;
+        case MTC_ST_WEST:   nIndex = 3; break;
+        case MTC_ST_N_WEST: nIndex = 4; break;
+        case MTC_ST_N_EAST: nIndex = 5; break;
+        case MTC_ST_S_WEST: nIndex = 6; break;
+        case MTC_ST_S_EAST: nIndex = 7; break;
+        
+        case MTC_ST_CLICK:       nIndex = 8; break;
+        case MTC_ST_DOUBLECLICK: nIndex = 9; break;
+     
+        case MTC_1_POINT:        nIndex = 10; break;
+     
+        case MTC_MT_NORTH:        nIndex = 11; break;
+        case MTC_MT_SOUTH:        nIndex = 12; break;
+        case MTC_MT_EAST:         nIndex = 13; break;
+        case MTC_MT_WEST:         nIndex = 14; break;
+        case MTC_MT_S_WEST:       nIndex = 17; break;
+        case MTC_MT_N_EAST:       nIndex = 16; break;
+        case MTC_MT_N_WEST:       nIndex = 15; break;
+        case MTC_MT_S_EAST:       nIndex = 18; break;
+        
+        case MTC_MT_CLICK:        nIndex = 19; break;
+        case MTC_2_POINT:         nIndex = 21; break;
+
+        case MTC_ST_ROTATE_CW:    nIndex = 22; break;
+        case MTC_ST_ROTATE_CCW:   nIndex = 23; break;
+
+        
+        case MTC_ZOOM_IN:         nIndex = 24; break;
+        case MTC_ZOOM_OUT:        nIndex = 25; break;
+    }
+    
+    if (nIndex  == -1)
+        return;
+    
+    pSrc = (alt_u8 *)gesture_bmp.pixel_data + nIndex * BmpW * BmpH * 3;
+    
+    pDesStart = (alt_u8 *)VIPFR_GetDrawFrame(pReader) + (ptDraw->y*pReader->width*pReader->bytes_per_pixel) + (ptDraw->x*pReader->bytes_per_pixel);
+    
+    for(y=0;y<BmpH;y++){
+        pDes = pDesStart; 
+        for(x=0;x<BmpW;x++){
+            memcpy(pDes, pSrc, 3);
+            pDes += 4;
+            pSrc += 3;
+        }
+        pDesStart += pReader->width*pReader->bytes_per_pixel; 
+    }
+} 
+
+void GUI_TraceGesture(VIP_FRAME_READER *pReader, POINT *ptDraw, alt_u8 GestureId ){
+    if (GestureId == MTC_2_POINT)
+        return;
+    if (GestureId == MTC_1_POINT)
+        return;
+    GUI_ShowGesture(pReader, ptDraw, GestureId);
+}
+
+//void GUI_ClearPaintArea(VIP_FRAME_READER *pReader, DESK_INFO *pDeskInfo){
+//    RECT rc;
+//
+//    return;
+//}
+
+void GUI(MTC_INFO *pTouch){
+    // video
+//    DESK_INFO DeskInfo;
+    VIP_FRAME_READER *pReader;
+    int X1, Y1, X2, Y2;
+    POINT Pt1, Pt2, ptGesture;
+    alt_u8 Event, TouchNum, LedMask = 0x01;
+    const int nDotSize = DOT_SIZE;
+    RECT rcTouch;
+    // Set the rectangle for the button
+    RECT rc_button;
+    int ColorPen0, ColorPen1, ButtonId, ButtonId2;
+    bool UpdatePalette;
+#ifdef ENALBE_TOUCH_FILTER    
+    POINT LastPt1, LastPt2;
+    alt_u32 LastTimePt1=0,LastTimePt2=0; 
+    const alt_u32 ContinuedTime = alt_ticks_per_second()/50;
+#endif    
+    
+    /////////////////////////////////////////////
+    // frame reader
+#ifdef DUAL_FRAME_BUFFER
+    pReader =  VIPFR_Init(ALT_VIP_VFR_0_BASE, (void *)FR_FRAME_0, (void *)FR_FRAME_1, FRAME_WIDTH, FRAME_HEIGHT);
+#else    
+    pReader =  VIPFR_Init(ALT_VIP_VFR_0_BASE, (void *)FR_FRAME_1, (void *)FR_FRAME_1, FRAME_WIDTH, FRAME_HEIGHT);
+#endif // DUAL_FRAME_BUFFER    
+    VIPFR_Go(pReader, TRUE);
+    
+    
+    // clean screen
+    vid_clean_screen(pReader, BLACK_24);
+    
+   
+    //GUI_DeskInit(pReader, &DeskInfo);
+    GUI_DeskDraw(pReader, &rc_button);
+    
+    VIPFR_ActiveDrawFrame(pReader);
+    
+//    RectCopy(&rcTouch, &DeskInfo.rcPaint);
+//    RectInflate(&rcTouch, -nDotSize-2, -nDotSize-2);
+
+    
+    while(1){
+		// touch
+		if (MTC_GetStatus(pTouch, &Event, &TouchNum, &X1, &Y1, &X2, &Y2)){
+			PtSet(&Pt1, X1, Y1);
+			if(TouchNum == 1 && GUI_CheckButton(&Pt1, &rc_button)) {
+				printf("Options.");
+			}
+    	}
+    }
+}
+
+

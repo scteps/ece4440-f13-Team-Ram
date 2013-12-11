@@ -1,0 +1,54 @@
+#ifndef SENSOR_H_
+#define SENSOR_H_
+
+#include "system.h"
+#include "altera_avalon_pio_regs.h"
+#include "unistd.h" //Sleep/usleep
+#include <stdio.h>
+#include <stddef.h>
+#include "alt_types.h"
+#include "sys/alt_alarm.h"
+
+//////////////////////// definitions //////////////////////////////////////
+//#define CLKPIN	PIO_0_BASE // PIN 0
+#define CLKPIN   PIO_1_BASE // PIN 3
+#define CSENABLE PIO_2_BASE // PIN 2
+#define	MISO	PIO_1_BASE  // PIN 3
+#define CSE2 	CSE_3_BASE
+#define	MISO2	MISO_2_BASE
+#define CSE3 	CSE_3_BASE
+#define	MISO3	MISO_3_BASE
+
+#define CLK BIT0			//2.0 (MSP) //shared clock
+#define CLK_TEST BIT5		//1.5 (MSP)
+#define HALF_PERIOD (15625)	//0.5 second
+
+#define ALARMTICKS(x) (alt_ticks_per_second()/(x))
+
+//ADC
+typedef struct{
+	///////////port def/////////////
+	//shared across all the ICs/main board
+	char clk; //clock output MSP -> ADC// this will be share across the main board and other ADCs
+	//unique for each ICs
+	char cs; //Enable channel from MSP -> ADC //This will be unique for each ADC
+	char data_in; //Data input from ADC -> MSP //This will be unique for each ADC
+
+	//////////data/////////////////
+	unsigned char readDataR; //digital value (raw) from ADC
+	unsigned long vin; //analog decoded value vin from ADC
+	long iin; //analog decode value iin from ADC
+}ADC;
+
+/////////////////////////method prototype ///////////////////////////////////
+void initSensorVars(int * isHigh);
+void initializePorts(ADC * a0, ADC * a1, ADC * a2);
+void toggleClock(int * isHigh);
+void readadc(ADC * a, int * isHigh);
+void vin(ADC *a); //analyze readDataR and update vin
+void iin(ADC *a); //analyze readDataR and update iin
+long estimateV(int i,long curVin,int tempData); //recursive method for estimating vin digital value => analog value
+long estimateI(int i, long curIin, unsigned long tempData,long sign); //recursive method for estimating Iin digital value => analog value
+
+
+#endif /* SENSOR_H_ */

@@ -1,0 +1,95 @@
+
+State Machine - |MTL_DEMO|MTL_SOPC:MTL_SOPC_inst|altera_merlin_burst_adapter:burst_adapter_002|altera_merlin_burst_adapter_full:altera_merlin_burst_adapter_full.the_ba|state
+Name state.ST_IDLE state.ST_UNCOMP_WR_SUBBURST state.ST_UNCOMP_TRANS state.ST_COMP_TRANS 
+state.ST_IDLE 0 0 0 0 
+state.ST_COMP_TRANS 1 0 0 1 
+state.ST_UNCOMP_TRANS 1 0 1 0 
+state.ST_UNCOMP_WR_SUBBURST 1 1 0 0 
+
+State Machine - |MTL_DEMO|MTL_SOPC:MTL_SOPC_inst|TERASIC_MULTI_TOUCH:multi_touch|i2c_touch_config:i2c_touch_config_inst|i2c_touch_controller:u_i2c_touch_controller|i2c_state
+Name i2c_state.STOP i2c_state.DATA_R i2c_state.S_ADDR_R i2c_state.R_ADDR_W i2c_state.S_ADDR_W i2c_state.START 
+i2c_state.START 0 0 0 0 0 0 
+i2c_state.S_ADDR_W 0 0 0 0 1 1 
+i2c_state.R_ADDR_W 0 0 0 1 0 1 
+i2c_state.S_ADDR_R 0 0 1 0 0 1 
+i2c_state.DATA_R 0 1 0 0 0 1 
+i2c_state.STOP 1 0 0 0 0 1 
+
+State Machine - |MTL_DEMO|MTL_SOPC:MTL_SOPC_inst|alt_vipitc130_IS2Vid:alt_vip_itc_0|alt_vipitc130_IS2Vid_statemachine:statemachine|state_int
+Name state_int.INSERT_ANC state_int.WAIT_FOR_ANC state_int.WAIT_FOR_SYNCH state_int.SYNCHED state_int.FIND_MODE state_int.INTERLACING state_int.HEIGHT_0 state_int.HEIGHT_1 state_int.HEIGHT_2 state_int.HEIGHT_3 state_int.WIDTH_0 state_int.WIDTH_1 state_int.WIDTH_2 state_int.WIDTH_3 state_int.FIND_SOP 
+state_int.FIND_SOP 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+state_int.WIDTH_3 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 
+state_int.WIDTH_2 0 0 0 0 0 0 0 0 0 0 0 0 1 0 1 
+state_int.WIDTH_1 0 0 0 0 0 0 0 0 0 0 0 1 0 0 1 
+state_int.WIDTH_0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 
+state_int.HEIGHT_3 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 
+state_int.HEIGHT_2 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 
+state_int.HEIGHT_1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 
+state_int.HEIGHT_0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 
+state_int.INTERLACING 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 
+state_int.FIND_MODE 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 
+state_int.SYNCHED 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 
+state_int.WAIT_FOR_SYNCH 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 
+state_int.WAIT_FOR_ANC 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 
+state_int.INSERT_ANC 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+
+State Machine - |MTL_DEMO|MTL_SOPC:MTL_SOPC_inst|alt_vipvfr130_vfr:alt_vip_vfr_0|alt_vipvfr130_vfr_controller:controller|state
+Name state.WAITING_END_FRAME state.SENDING_GO_AND_ENABLE_INTERRUPT state.SENDING_TYPE state.SENDING_WORDS state.SENDING_SAMPLES state.SENDING_ADDRESS state.IDLE 
+state.IDLE 0 0 0 0 0 0 0 
+state.SENDING_ADDRESS 0 0 0 0 0 1 1 
+state.SENDING_SAMPLES 0 0 0 0 1 0 1 
+state.SENDING_WORDS 0 0 0 1 0 0 1 
+state.SENDING_TYPE 0 0 1 0 0 0 1 
+state.SENDING_GO_AND_ENABLE_INTERRUPT 0 1 0 0 0 0 1 
+state.WAITING_END_FRAME 1 0 0 0 0 0 1 
+
+State Machine - |MTL_DEMO|MTL_SOPC:MTL_SOPC_inst|alt_vipvfr130_vfr:alt_vip_vfr_0|alt_vipvfr130_prc:prc|alt_vipvfr130_prc_core:prc_core|state
+Name state.ENDING state.RUNNING state.WAITING state.IDLE 
+state.IDLE 0 0 0 0 
+state.WAITING 0 0 1 1 
+state.RUNNING 0 1 0 1 
+state.ENDING 1 0 0 1 
+
+State Machine - |MTL_DEMO|MTL_SOPC:MTL_SOPC_inst|MTL_SOPC_sdram:sdram|m_next
+Name m_next.010000000 m_next.000010000 m_next.000001000 m_next.000000001 
+m_next.000000001 0 0 0 0 
+m_next.000001000 0 0 1 1 
+m_next.000010000 0 1 0 1 
+m_next.010000000 1 0 0 1 
+
+State Machine - |MTL_DEMO|MTL_SOPC:MTL_SOPC_inst|MTL_SOPC_sdram:sdram|m_state
+Name m_state.100000000 m_state.010000000 m_state.001000000 m_state.000100000 m_state.000010000 m_state.000001000 m_state.000000100 m_state.000000010 m_state.000000001 
+m_state.000000001 0 0 0 0 0 0 0 0 0 
+m_state.000000010 0 0 0 0 0 0 0 1 1 
+m_state.000000100 0 0 0 0 0 0 1 0 1 
+m_state.000001000 0 0 0 0 0 1 0 0 1 
+m_state.000010000 0 0 0 0 1 0 0 0 1 
+m_state.000100000 0 0 0 1 0 0 0 0 1 
+m_state.001000000 0 0 1 0 0 0 0 0 1 
+m_state.010000000 0 1 0 0 0 0 0 0 1 
+m_state.100000000 1 0 0 0 0 0 0 0 1 
+
+State Machine - |MTL_DEMO|MTL_SOPC:MTL_SOPC_inst|MTL_SOPC_sdram:sdram|i_next
+Name i_next.111 i_next.101 i_next.010 i_next.000 
+i_next.000 0 0 0 0 
+i_next.010 0 0 1 1 
+i_next.101 0 1 0 1 
+i_next.111 1 0 0 1 
+
+State Machine - |MTL_DEMO|MTL_SOPC:MTL_SOPC_inst|MTL_SOPC_sdram:sdram|i_state
+Name i_state.111 i_state.101 i_state.011 i_state.010 i_state.001 i_state.000 
+i_state.000 0 0 0 0 0 0 
+i_state.001 0 0 0 0 1 1 
+i_state.010 0 0 0 1 0 1 
+i_state.011 0 0 1 0 0 1 
+i_state.101 0 1 0 0 0 1 
+i_state.111 1 0 0 0 0 1 
+
+State Machine - |MTL_DEMO|MTL_SOPC:MTL_SOPC_inst|MTL_SOPC_cpu:cpu|MTL_SOPC_cpu_nios2_oci:the_MTL_SOPC_cpu_nios2_oci|MTL_SOPC_cpu_jtag_debug_module_wrapper:the_MTL_SOPC_cpu_jtag_debug_module_wrapper|MTL_SOPC_cpu_jtag_debug_module_tck:the_MTL_SOPC_cpu_jtag_debug_module_tck|DRsize
+Name DRsize.101 DRsize.100 DRsize.011 DRsize.010 DRsize.001 DRsize.000 
+DRsize.000 0 0 0 0 0 0 
+DRsize.001 0 0 0 0 1 1 
+DRsize.010 0 0 0 1 0 1 
+DRsize.011 0 0 1 0 0 1 
+DRsize.100 0 1 0 0 0 1 
+DRsize.101 1 0 0 0 0 1 

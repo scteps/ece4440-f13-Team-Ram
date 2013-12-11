@@ -1,0 +1,4 @@
+eclipse.preferences.version=1
+newSoftwareExampleWizardPage.defaultLocation=C\:\\Integration\\software\\integrated_v1
+newSoftwareExampleWizardPage.sopcinfoFile=C\:\\Integration\\MTL_SOPC.sopcinfo
+newSoftwareExampleWizardPage2.newBspLocation=C\:\\Integration\\software\\integrated_v1_bsp
